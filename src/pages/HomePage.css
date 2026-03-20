@@ -17,6 +17,12 @@
   grid-template-columns: repeat(8, 1fr);
 }
 
+/* JSX currently has one extra .product-container wrapping all cards.
+   Flatten only that direct child so inner cards participate in the grid. */
+.home-page .products-grid>.product-container {
+  display: contents;
+}
+
 /* @media is used to create responsive design (making the
    website look good on any screen size). This @media
    means when the screen width is 2000px or less, we
