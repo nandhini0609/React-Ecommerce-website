@@ -1,17 +1,23 @@
 import './header.css';
 import './HomePage.css';
+import axios from 'axios';
 import { Header } from '../components/Header';
 import { products } from '../../startingcode/data/products';
 
 export function HomePage() {
-    fetch('http://localhost:3000/api/products')
+    axios.get('http://localhost:3000/api/products')
         .then((response) => {
-            return response.json();
-
-        }).then((data) => {
-            console.log(data);
+            console.log(response.data);
 
         })
+    // fetch('http://localhost:3000/api/products')
+    // .then((response) => {
+    //     return response.json();
+
+    // }).then((data) => {
+    //     console.log(data);
+
+    // }) instead of axios, we can also use fetch to make the API call. The above code is commented out, but it achieves the same result as the axios code.
     return (
         <>
             <title>Ecommerce Project</title>
