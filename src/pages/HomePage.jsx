@@ -9,16 +9,30 @@ export function HomePage() {
     const [products, setProducts] = useState([]);
     const [cart, setCart] = useState([]);
     useEffect(() => {
-        axios.get('http://localhost:3000/api/products')
+        axios.get('/api/products')
             .then((response) => {
                 setProducts(response.data);
 
             })
-        axios.get('http://localhost:3000/api/cart-items')
+        axios.get('/api/cart-items')
             .then((response) => {
                 setCart(response.data);
             })
-    }, []);//useeffect for controlling running code
+    }, []);
+    //instead of this in vite.config.js, we can also set up a proxy to avoid CORS issues. The above code is commented out, but it achieves the same result as the proxy setup in vite.config.js.
+    //useEffect(() => {
+    // axios.get('http://localhost:3000/api/products')
+    //  .then((response) => {
+    //  setProducts(response.data);
+
+    // })
+    //axios.get('http://localhost:3000/api/cart-items')
+    // .then((response) => {
+    //setCart(response.data);
+    // })
+    //}, []);
+
+    //useeffect for controlling running code
 
     // fetch('http://localhost:3000/api/products')
     // .then((response) => {
