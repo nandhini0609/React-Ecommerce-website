@@ -9,17 +9,30 @@ import './App.css'
 
 function App() {
   const [cart, setCart] = useState([]);
+  //asyn await 
+  const loadCart = async () => {
+    const response = await axios.get('/api/cart-items?expand=product')
+
+    setCart(response.data);
+  }
+
   useEffect(() => {
-    axios.get('/api/cart-items?expand=product')
-      .then((response) => {
-        setCart(response.data);
-      })
+
+    loadCart();
   }, [])
+
+  // useEffect(() => {
+
+  //   axios.get('/api/cart-items?expand=product')
+  //     .then((response) => {
+  //       setCart(response.data);
+  //     })
+  // }, [])
 
 
   return (
     <Routes>
-      <Route index element={<HomePage cart={cart} />} />
+      <Route index element={<HomePage cart={cart} loadCart={loadCart} />} />
       <Route path="checkout" element={<CheckOut cart={cart} />} />
       <Route path="orders" element={<OrdersPage cart={cart} />} />
       <Route path="tracking" element={<TrackingPage />} />
@@ -29,3 +42,6 @@ function App() {
 }
 
 export default App
+
+
+//to avoid loading we must use props
