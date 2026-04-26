@@ -2,7 +2,7 @@ import axios from 'axios';
 import { useEffect, useState, Fragment } from 'react';
 import dayjs from 'dayjs';
 import { formatMoney } from '../utils/money';
-import './ordersPage.css';
+import './OrdersPage.css';
 import './header.css';
 import { Header } from '../components/Header';
 
