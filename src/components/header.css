@@ -39,24 +39,13 @@
 }
 
 .header .logo {
-  height: 26px;
+  display: block;
+  color: white;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  line-height: 1;
   margin-top: 1px;
-}
-
-.header .mobile-logo {
-  display: none;
-}
-
-@media (max-width: 675px) {
-  .header .logo {
-    display: none;
-  }
-
-  .header .mobile-logo {
-    display: block;
-    height: 26px;
-    margin-top: 1px;
-  }
 }
 
 .header .middle-section {

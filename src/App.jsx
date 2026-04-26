@@ -10,15 +10,15 @@ import './App.css'
 function App() {
   const [cart, setCart] = useState([]);
   //asyn await 
-  const loadCart = async () => {
-    const response = await axios.get('/api/cart-items?expand=product')
-
-    setCart(response.data);
+  const loadCart = () => {
+    return axios.get('/api/cart-items?expand=product')
+      .then((response) => {
+        setCart(response.data);
+      });
   }
 
   useEffect(() => {
-
-    loadCart();
+    void loadCart();
   }, [])
 
   // useEffect(() => {
@@ -33,7 +33,7 @@ function App() {
   return (
     <Routes>
       <Route index element={<HomePage cart={cart} loadCart={loadCart} />} />
-      <Route path="checkout" element={<CheckOut cart={cart} />} />
+      <Route path="checkout" element={<CheckOut cart={cart} loadCart={loadCart} />} />
       <Route path="orders" element={<OrdersPage cart={cart} />} />
       <Route path="tracking" element={<TrackingPage />} />
     </Routes>

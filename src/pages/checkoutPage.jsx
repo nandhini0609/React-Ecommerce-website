@@ -1,24 +1,47 @@
 import axios from 'axios';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router';
 import './checkout-header.css';
 import './checkoutPage.css';
 import { formatMoney } from '../utils/money';
 
 
 
-export function CheckOut({ cart }) {
+export function CheckOut({ cart, loadCart }) {
+    const [cartItems, setCartItems] = useState(cart);
     const [deliveryOptions, setDeliveryOptions] = useState([]);
     const [paymentSummary, setPaymentSummary] = useState(null)
+    const navigate = useNavigate();
+    const loadPaymentSummary = () => {
+        axios.get('/api/payment-summary').then((response) => {
+            setPaymentSummary(response.data);
+        })
+    }
+
+    const handleDelete = async (productId) => {
+        await axios.delete(`/api/cart-items/${productId}`);
+        setCartItems((currentCartItems) => {
+            return currentCartItems.filter((cartItem) => cartItem.product.id !== productId);
+        });
+    }
+
+    const handlePlaceOrder = async () => {
+        await axios.post('/api/orders');
+        navigate('/orders');
+    }
+
     useEffect(() => {
         axios.get('/api/delivery-options?expand=estimatedDeliveryTime')
             .then((reponse) => {
                 setDeliveryOptions(reponse.data);
             })
-        axios.get('/api/payment-summary').then((response) => {
-            setPaymentSummary(response.data);
-        })
+        loadPaymentSummary()
     }, [])
+
+    useEffect(() => {
+        setCartItems(cart);
+    }, [cart]);
     return (
 
         <>
@@ -27,14 +50,13 @@ export function CheckOut({ cart }) {
                 <div className="header-content">
                     <div className="checkout-header-left-section">
                         <a href="/">
-                            <img className="logo" src="/images/logo.png" />
-                            <img className="mobile-logo" src="/images/mobile-logo.png" />
+                            <span className="logo">Nmart</span>
                         </a>
                     </div>
 
                     <div className="checkout-header-middle-section">
                         Checkout (<a className="return-to-home-link"
-                            href="/">3 items</a>)
+                            href="/">{cartItems.reduce((totalQuantity, cartItem) => totalQuantity + cartItem.quantity, 0)} items</a>)
                     </div>
 
                     <div className="checkout-header-right-section">
@@ -48,7 +70,7 @@ export function CheckOut({ cart }) {
 
                 <div className="checkout-grid">
                     <div className="order-summary">
-                        {deliveryOptions.length > 0 && cart.map((cartItem) => {
+                        {deliveryOptions.length > 0 && cartItems.map((cartItem) => {
                             const selectedDeliverOption = deliveryOptions
                                 .find((deliveryOption) => {
                                     return deliveryOption.id === cartItem.deliveryOptionId;
@@ -79,9 +101,17 @@ export function CheckOut({ cart }) {
                                                 <span className="update-quantity-link link-primary">
                                                     Update
                                                 </span>
-                                                <span className="delete-quantity-link link-primary">
+                                                <button
+                                                    type="button"
+                                                    className="delete-quantity-link link-primary"
+                                                    onClick={async () => {
+                                                        await handleDelete(cartItem.product.id);
+                                                        await loadCart();
+                                                        loadPaymentSummary();
+                                                    }}
+                                                >
                                                     Delete
-                                                </span>
+                                                </button>
                                             </div>
                                         </div>
 
@@ -159,7 +189,10 @@ export function CheckOut({ cart }) {
                                     <div className="payment-summary-money">{formatMoney(paymentSummary.totalCostCents)}</div>
                                 </div>
 
-                                <button className="place-order-button button-primary">
+                                <button
+                                    className="place-order-button button-primary"
+                                    onClick={handlePlaceOrder}
+                                >
                                     Place your order
                                 </button>
 

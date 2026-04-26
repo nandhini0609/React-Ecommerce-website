@@ -27,12 +27,17 @@
 }
 
 .checkout-header .logo {
-  height: 26px;
+  display: inline-flex;
+  align-items: center;
+  color: white;
+  background-color: rgb(8, 79, 45);
+  border-radius: 999px;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  line-height: 1;
+  padding: 8px 14px;
   margin-top: 0px;
-}
-
-.checkout-header .mobile-logo {
-  display: none;
 }
 
 /* @media is used to create responsive design (making the
@@ -45,12 +50,8 @@
   }
 
   .checkout-header .logo {
-    display: none;
-  }
-
-  .checkout-header .mobile-logo {
-    display: inline-block;
-    height: 26px;
+    font-size: 16px;
+    padding: 7px 12px;
   }
 }
 

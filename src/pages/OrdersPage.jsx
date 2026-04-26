@@ -8,10 +8,11 @@ import { Header } from '../components/Header';
 
 export function OrdersPage({ cart }) {
     const [orders, setOrders] = useState([]);
+
     useEffect(() => {
         axios.get('/api/orders?expand=products')
             .then((response) => {
-                setOrders(response.data);
+                setOrders(response.data.slice(0, 1));
 
             })
 
