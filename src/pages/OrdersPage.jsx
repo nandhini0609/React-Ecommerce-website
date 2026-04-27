@@ -9,13 +9,36 @@ import { Header } from '../components/Header';
 export function OrdersPage({ cart }) {
     const [orders, setOrders] = useState([]);
 
-    useEffect(() => {
-        axios.get('/api/orders?expand=products')
+    const loadOrders = () => {
+        return axios.get('/api/orders?expand=products')
             .then((response) => {
-                setOrders(response.data.slice(0, 1));
-
+                // Only show orders from the last 30 days
+                const thirtyDaysAgo = Date.now() - (30 * 24 * 60 * 60 * 1000);
+                const recentOrders = response.data.filter(order => order.orderTimeMs >= thirtyDaysAgo);
+                setOrders(recentOrders);
             })
+    }
 
+    useEffect(() => {
+        loadOrders().catch(() => {
+            // Handled by global interceptor.
+        })
+
+    }, [])
+
+    useEffect(() => {
+        const onRetry = (event) => {
+            if (event?.detail?.path === '/orders') {
+                loadOrders().catch(() => {
+                    // Handled by global interceptor.
+                })
+            }
+        }
+
+        window.addEventListener('nmart-api-retry', onRetry)
+        return () => {
+            window.removeEventListener('nmart-api-retry', onRetry)
+        }
     }, [])
     return (
         <>
@@ -23,7 +46,11 @@ export function OrdersPage({ cart }) {
             <Header cart={cart} />
 
             <div className="orders-page">
-                <div className="page-title">Your Orders</div>
+                <div className="page-title">
+                    <a href="/" style={{ textDecoration: 'none' }}>
+                        <span className="logo">Nmart</span>
+                    </a>
+                </div>
 
                 <div className="orders-grid">
 

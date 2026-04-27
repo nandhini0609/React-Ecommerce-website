@@ -1,0 +1,48 @@
+.api-error-banner {
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 16px;
+    background: #fff3cd;
+    color: #7a2e00;
+    border-bottom: 1px solid #ffd79a;
+    font-size: 14px;
+}
+
+.api-error-banner-close {
+    border: 1px solid #c65a00;
+    background: #fff;
+    color: #7a2e00;
+    border-radius: 4px;
+    padding: 6px 10px;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+.api-error-banner-close:hover {
+    background: #fff7e8;
+}
+
+.api-error-banner-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.api-error-banner-retry {
+    border: 1px solid #7a2e00;
+    background: #7a2e00;
+    color: #fff;
+    border-radius: 4px;
+    padding: 6px 10px;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+.api-error-banner-retry:hover {
+    background: #612500;
+}

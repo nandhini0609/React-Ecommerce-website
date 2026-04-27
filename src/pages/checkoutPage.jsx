@@ -13,8 +13,16 @@ export function CheckOut({ cart, loadCart }) {
     const [deliveryOptions, setDeliveryOptions] = useState([]);
     const [paymentSummary, setPaymentSummary] = useState(null)
     const navigate = useNavigate();
+
+    const loadDeliveryOptions = () => {
+        return axios.get('/api/delivery-options?expand=estimatedDeliveryTime')
+            .then((reponse) => {
+                setDeliveryOptions(reponse.data);
+            })
+    }
+
     const loadPaymentSummary = () => {
-        axios.get('/api/payment-summary').then((response) => {
+        return axios.get('/api/payment-summary').then((response) => {
             setPaymentSummary(response.data);
         })
     }
@@ -32,12 +40,35 @@ export function CheckOut({ cart, loadCart }) {
     }
 
     useEffect(() => {
-        axios.get('/api/delivery-options?expand=estimatedDeliveryTime')
-            .then((reponse) => {
-                setDeliveryOptions(reponse.data);
-            })
-        loadPaymentSummary()
+        loadDeliveryOptions().catch(() => {
+            // Handled by global interceptor.
+        })
+
+        loadPaymentSummary().catch(() => {
+            // Handled by global interceptor.
+        })
     }, [])
+
+    useEffect(() => {
+        const onRetry = (event) => {
+            if (event?.detail?.path === '/checkout') {
+                loadCart().catch(() => {
+                    // Handled by global interceptor.
+                })
+                loadDeliveryOptions().catch(() => {
+                    // Handled by global interceptor.
+                })
+                loadPaymentSummary().catch(() => {
+                    // Handled by global interceptor.
+                })
+            }
+        }
+
+        window.addEventListener('nmart-api-retry', onRetry)
+        return () => {
+            window.removeEventListener('nmart-api-retry', onRetry)
+        }
+    }, [loadCart])
 
     useEffect(() => {
         setCartItems(cart);

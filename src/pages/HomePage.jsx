@@ -10,14 +10,34 @@ import { Header } from '../components/Header';
 export function HomePage({ cart, loadCart }) {
     const [products, setProducts] = useState([]);
 
-    useEffect(() => {
-        axios.get('/api/products')
+    const loadProducts = () => {
+        return axios.get('/api/products')
             .then((response) => {
                 setProducts(response.data);
-
             })
+    }
+
+    useEffect(() => {
+        loadProducts().catch(() => {
+            // Handled by global interceptor.
+        })
 
     }, []);
+
+    useEffect(() => {
+        const onRetry = (event) => {
+            if (event?.detail?.path === '/') {
+                loadProducts().catch(() => {
+                    // Handled by global interceptor.
+                })
+            }
+        }
+
+        window.addEventListener('nmart-api-retry', onRetry)
+        return () => {
+            window.removeEventListener('nmart-api-retry', onRetry)
+        }
+    }, [])
     //instead of this in vite.config.js, we can also set up a proxy to avoid CORS issues. The above code is commented out, but it achieves the same result as the proxy setup in vite.config.js.
     //useEffect(() => {
     // axios.get('http://localhost:3000/api/products')
