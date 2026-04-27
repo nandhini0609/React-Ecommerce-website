@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { formatMoney } from '../utils/money';
 import axios from "axios";
+import { toast } from 'react-toastify';
 
 
 export function Product({ product, loadCart }) {
@@ -62,6 +63,7 @@ export function Product({ product, loadCart }) {
                     quantity: quantity
                 })
                 await loadCart();
+                toast.success(`${product.name} added to cart`);
 
             }
 

@@ -7,10 +7,10 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://backend-ecommerce-website-zc26.onrender.com'
+        target: 'http://localhost:3000'
       },
       '/images': {
-        target: 'https://backend-ecommerce-website-zc26.onrender.com'
+        target: 'http://localhost:3000'
       }
     }
   }

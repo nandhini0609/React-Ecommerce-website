@@ -2,6 +2,7 @@ import axios from 'axios';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
+import { toast } from 'react-toastify';
 import './checkout-header.css';
 import './checkoutPage.css';
 import { formatMoney } from '../utils/money';
@@ -36,6 +37,7 @@ export function CheckOut({ cart, loadCart }) {
 
     const handlePlaceOrder = async () => {
         await axios.post('/api/orders');
+        toast.success('Order placed successfully');
         navigate('/orders');
     }
 
