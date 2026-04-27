@@ -13,7 +13,8 @@ export function HomePage({ cart, loadCart }) {
     const loadProducts = () => {
         return axios.get('/api/products')
             .then((response) => {
-                setProducts(response.data);
+                const productList = Array.isArray(response.data) ? response.data : []
+                setProducts(productList);
             })
     }
 

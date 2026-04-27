@@ -2,7 +2,7 @@
     "rewrites": [
         {
             "source": "/api/(.*)",
-            "destination": "/api/$1"
+            "destination": "https://backend-ecommerce-website-zc26.onrender.com/api/$1"
         },
         {
             "source": "/(.*)",

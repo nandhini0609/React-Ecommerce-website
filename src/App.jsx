@@ -15,7 +15,8 @@ function App() {
   const loadCart = () => {
     return axios.get('/api/cart-items?expand=product')
       .then((response) => {
-        setCart(response.data);
+        const cartItems = Array.isArray(response.data) ? response.data : []
+        setCart(cartItems);
       });
   }
 

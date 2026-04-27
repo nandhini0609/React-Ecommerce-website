@@ -1,7 +1,9 @@
 import { Link } from 'react-router'
 export function Header({ cart }) {
     let totalQuantity = 0
-    cart.forEach((cartItem) => {
+    const cartItems = Array.isArray(cart) ? cart : []
+
+    cartItems.forEach((cartItem) => {
         totalQuantity += cartItem.quantity
 
     })
