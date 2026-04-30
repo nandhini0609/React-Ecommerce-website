@@ -1,5 +1,5 @@
 import { Link } from 'react-router'
-export function Header({ cart }) {
+export function Header({ cart, searchQuery = '', onSearchChange }) {
     let totalQuantity = 0
     const cartItems = Array.isArray(cart) ? cart : []
 
@@ -16,7 +16,13 @@ export function Header({ cart }) {
             </div>
 
             <div className="middle-section">
-                <input className="search-bar" type="text" placeholder="Search" />
+                <input
+                    className="search-bar"
+                    type="text"
+                    placeholder="Search"
+                    value={searchQuery}
+                    onChange={(e) => onSearchChange && onSearchChange(e.target.value)}
+                />
 
                 <button className="search-button">
                     <img className="search-icon" src="/images/icons/search-icon.png" />

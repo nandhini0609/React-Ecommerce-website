@@ -9,6 +9,7 @@ import { Header } from '../components/Header';
 
 export function HomePage({ cart, loadCart }) {
     const [products, setProducts] = useState([]);
+    const [searchQuery, setSearchQuery] = useState('');
 
     const loadProducts = () => {
         return axios.get('/api/products')
@@ -17,6 +18,15 @@ export function HomePage({ cart, loadCart }) {
                 setProducts(productList);
             })
     }
+
+    // Filter products based on search query
+    const filteredProducts = products.filter((product) => {
+        const query = searchQuery.toLowerCase();
+        return (
+            product.name.toLowerCase().includes(query) ||
+            (product.description && product.description.toLowerCase().includes(query))
+        );
+    });
 
     useEffect(() => {
         loadProducts().catch(() => {
@@ -65,11 +75,11 @@ export function HomePage({ cart, loadCart }) {
     return (
         <>
             <title>Ecommerce Project</title>
-            <Header cart={cart} />
+            <Header cart={cart} searchQuery={searchQuery} onSearchChange={setSearchQuery} />
 
 
             <div className="home-page">
-                <ProductsGrid products={products} loadCart={loadCart} />
+                <ProductsGrid products={filteredProducts} loadCart={loadCart} />
             </div>
         </>
     )
