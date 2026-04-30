@@ -35,6 +35,33 @@ export function CheckOut({ cart, loadCart }) {
         });
     }
 
+    const handleDeliveryOptionChange = async (productId, deliveryOptionId) => {
+        try {
+            await axios.put(`/api/cart-items/${productId}`, { deliveryOptionId });
+
+            // Update the cart items with the new delivery option
+            setCartItems((currentCartItems) => {
+                return currentCartItems.map((cartItem) => {
+                    if (cartItem.product.id === productId) {
+                        return {
+                            ...cartItem,
+                            deliveryOptionId: deliveryOptionId
+                        };
+                    }
+                    return cartItem;
+                });
+            });
+
+            // Reload payment summary since shipping cost may have changed
+            await loadPaymentSummary().catch(() => {
+                // Handled by global interceptor.
+            });
+        } catch (error) {
+            toast.error('Failed to update delivery option');
+            console.error('Error updating delivery option:', error);
+        }
+    }
+
     const handlePlaceOrder = async () => {
         await axios.post('/api/orders');
         toast.success('Order placed successfully');
@@ -150,7 +177,7 @@ export function CheckOut({ cart, loadCart }) {
 
                                         <div className="delivery-options">
                                             <div className="delivery-options-title">
-                                                Choose a d elivery option:
+                                                Choose a delivery option:
                                             </div>
                                             {deliveryOptions.map((deliveryOption) => {
                                                 let priceString = 'FREE Shipping';
@@ -161,8 +188,9 @@ export function CheckOut({ cart, loadCart }) {
                                                     <div key={deliveryOption.id} className="delivery-option">
                                                         <input type="radio"
                                                             checked={deliveryOption.id === cartItem.deliveryOptionId}
+                                                            onChange={() => handleDeliveryOptionChange(cartItem.product.id, deliveryOption.id)}
                                                             className="delivery-option-input"
-                                                            name={`delivery-option-${deliveryOption.id}`} />
+                                                            name={`delivery-option-${cartItem.product.id}`} />
                                                         <div>
                                                             <div className="delivery-option-date">
                                                                 {dayjs(deliveryOption.estimatedDeliveryTimeMs).format('dddd, MMMM D')}
